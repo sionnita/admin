@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom/client';
 import Sidebar from './pages/sidebar';
 import UpNavbar from './pages/navbar';
 import Login from './pages/login';
-import authHeader from "./services/auth-header";
+import { profil } from "./slices/auth";
 
 import {
   BrowserRouter as Router,
@@ -26,6 +26,8 @@ import routes from "./routes";
 
 function App() {
 
+  const dispatch = useDispatch();
+  dispatch(profil())
   const { user: currentUser } = useSelector((state) => state.auth);
   console.log(currentUser)
   if (!currentUser) {

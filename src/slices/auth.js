@@ -25,6 +25,19 @@ export const login = createAsyncThunk(
   }
 );
 
+export const profil = createAsyncThunk(
+  "profil",
+  async ( thunkAPI) => {
+    try {
+      const data = await AuthService.profil();
+      console.log(data)
+      return { user: data };
+    } catch (error) {
+      return thunkAPI.rejectWithValue();
+    }
+  }
+);
+
 export const logout = createAsyncThunk("auth/logout", async () => {
   await AuthService.logout();
 });

@@ -1,23 +1,46 @@
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Collapse from 'react-bootstrap/Collapse';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Offcanvas from 'react-bootstrap/Offcanvas';
+
 import { FiLogOut } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../slices/auth";
 import React, { useState, useEffect, useCallback } from "react";
+import { getMenu } from '../slices/menu';
 // import logo192 from "..//assets/logo192.png";
+
+
 
 function UpNavbar() {
   const dispatch = useDispatch();
   const logOut = useCallback(() => {
     dispatch(logout());
-  }, [dispatch]);
+  });
+  dispatch(getMenu())
+
+  const { menu } = useSelector(state=>state)
+  const myArray= menu
+  
+  const MenuLoad = (data)=>{
+    return  (
+      <li key={data.id}>
+      <details>
+        <summary>{data.nama}</summary>
+        <ul>
+        {data.children.map(dataChild => (
+          <div>{dataChild.children ? 
+            <div>{MenuLoad(dataChild)}</div>
+            :
+            
+          <li key={dataChild.id}><a>{dataChild.nama}</a></li>}
+          </div>
+          ))}
+        </ul>
+      </details>
+    </li>
+    )
+    
+  }
+
+
+
   return (
     <>
       {/* <div className="drawer pa-5">
@@ -44,30 +67,17 @@ function UpNavbar() {
               <h5 className="text-white w-5/6 ml-2">DaisyUI</h5>
             </div>
             <ul className=" text-white">
-              {myArray.map(name => (
-                <li>
-                  <details>
-                    <summary>{name}</summary>
-                    {name.children.length > 0 ?
-                      <ul>
-                        <li><a>level 2 item 1</a></li>
-                        <li><a>level 2 item 2</a></li>
-                        <li>
-                          <details open>
-                            <summary>Parent</summary>
-                            <ul>
-                              <li><a>level 3 item 1</a></li>
-                              <li><a>level 3 item 2</a></li>
-                            </ul>
-                          </details>
-                        </li>
-                      </ul>
+              {myArray.map(datas => (
+                <li key={datas.id}>
+                    {datas.children ?
+                    <div>{MenuLoad(datas)}</div>
+                   
                       :
-                      null
+                        <summary>{datas.nama}</summary>
                     }
-                  </details>
                 </li>
-              ))}
+              )
+              )}
             </ul>
 
 
